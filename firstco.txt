@@ -1,0 +1,9 @@
+//checking by using get that mySql Server is connected by node.js or not.
+app.get('/authentication', (req, res)=> {
+    mysqlConnection.query('SELECT color FROM auth_table',(err, rows, fields)=>{
+        if(!err)
+            console.log(rows);
+        else
+            console.log('err');
+    })
+});
