@@ -25,7 +25,7 @@ var mysqlConnection = mysql.createConnection({
 app.listen(4242, ()=>console.log('Express Server is running at port no : 4242'));
 
 
-//INSERT
+// //INSERT
 app.post('/authentication', (req, res)=> {
     var email=req.body.email;
     var password=req.body.password;
@@ -47,16 +47,25 @@ mysqlConnection.connect(function(err) {
 });
 
 
-// app.get('/authentication', (req, res)=> {
-//     mysqlConnection.query('SELECT color FROM auth_table WHERE email = req.body.email',(err, rows, fields)=>{
-//         if(!err){
-//             res.send(color);
-//         }    
-//         else{
-//             console.log('err');
-//             res.sendStatus(400);
-//         }
-//     })
-// });
+app.get('/getcolor', (req, res)=> {
+    var email=req.body.email;
+    var sql="SELECT color FROM auth_table WHERE email =?";
+    mysqlConnection.query(sql,[email],function(err, result){
+        if (err) throw err;
+               
+                res.send(result);
+              });
+          
+});
 
-
+app.get('/login', (req, res)=> {
+    var email=req.body.email;
+    var password=req.body.password;
+    var sql="SELECT * FROM auth_table WHERE email=? and password=?";
+    mysqlConnection.query(sql,[email,password],function(err, result){
+        if (err) throw err;
+               console.log(result);
+                res.send(result);
+              });
+          
+});
