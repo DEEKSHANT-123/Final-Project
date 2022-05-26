@@ -1,6 +1,38 @@
 //checking by using get that mySql Server is connected by node.js or not.
 app.get('/authentication', (req, res)=> {
     mysqlConnection.query('SELECT color FROM auth_table',(err, rows, fields)=>{
+        if(!err){
+            console.log(rows);
+            res.send(rows).status(200);
+        }
+        else{
+            console.log('err');
+            res.sendStatus(400);
+        }
+    })
+});
+
+
+//insert
+app.post('/authentication', (req, res)=> {
+    let auth = req.body;   //create object
+    var sql = "SET @email = ?;SET @password = ?;SET @color = ?; \
+    CALL new_procedure(@email,@password,@color); ";   
+    //new_preocedure is name of our store procedure in our table auth_table.
+    mysqlConnection.query(sql, 'INSERT INTO auth_table (email, password, color) VALUES', ('Company Inc', 'Highway 37', 'blue') [auth.email, auth.password, auth.color],(err, rows, fields)=>{
+        if(!err)
+            console.log(rows);
+        else
+            console.log('err');
+    })
+});
+
+  //insert
+app.post('/authentication', (req, res)=> {
+    let auth = req.body;   //create object
+    var sql = "INSERT INTO auth_table (email, password, color) VALUES ('Company', 'Highway', 'Blue')";  
+    //new_preocedure is name of our store procedure in our table auth_table.
+    mysqlConnection.query(sql,(err, rows, fields)=>{
         if(!err)
             console.log(rows);
         else
