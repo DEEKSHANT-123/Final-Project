@@ -21,19 +21,20 @@ mysqlConnection.connect((err)=>{
         console.log('DB Connection failed \n Error : ' + JSON.stringify(err, undefined, 2));
 });
 
-app.listen(3000, ()=>console.log('Express Server is running at port no : 3000'));
+app.listen(4242, ()=>console.log('Express Server is running at port no : 4242'));
 
 
 
-//insert
-app.post('/authentication', (req, res)=> {
-    let auth = req.body;   //create object
-    var sql = "SET @email = ?;SET @password = ?;SET @color = ?; \
-    CALL new_procedure(@email,@password,@color);";   //new_preocedure is name of our store procedure in our table auth_table.
-    mysqlConnection.query(sql, [auth.email, auth.password, auth.color],(err, rows, fields)=>{
-        if(!err)
+//checking by using get that mySql Server is connected by node.js or not.
+app.get('/authentication', (req, res)=> {
+    mysqlConnection.query('SELECT * FROM auth_table',(err, rows, fields)=>{
+        if(!err){
             console.log(rows);
-        else
+            res.send(rows).status(200);
+        }
+        else{
             console.log('err');
+            res.sendStatus(400);
+        }
     })
 });
