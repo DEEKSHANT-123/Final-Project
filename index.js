@@ -4,6 +4,7 @@ var app = express();
 const bodyParser = require('body-parser');
 var cors=require('cors')
 app.use(bodyParser.json());//access json data
+const bcrypt = require('bcrypt'); //for hash password
 app.use(cors())
 
 var mysqlConnection = mysql.createConnection({
@@ -29,6 +30,13 @@ app.listen(4242, ()=>console.log('Express Server is running at port no : 4242'))
 app.post('/authentication', (req, res)=> {
     var email=req.body.email;
     var password=req.body.password;
+    // const saltRounds = 10;
+
+    // bcrypt.genSalt(saltRounds, function(err, salt) {
+    //     bcrypt.hash(password, salt, function(err, hash) {
+    //         password=hash;
+    //     });
+    // });
     var color=req.body.color;
 mysqlConnection.connect(function(err) {
     if (err) throw err;
@@ -39,32 +47,29 @@ mysqlConnection.connect(function(err) {
         console.log("Number of records inserted: " + result.affectedRows);
         res.send(result);
       });
-    // mysqlConnection.query(sql, function (err, result) {
-    // if (err) throw err;
-    //   console.log("1 record inserted");
-    // });
 })
 });
 
 
-app.get('/getcolor', (req, res)=> {
+app.post('/getcolor', (req, res)=> {
     var email=req.body.email;
+    console.log(req.body);
     var sql="SELECT color FROM auth_table WHERE email =?";
     mysqlConnection.query(sql,[email],function(err, result){
         if (err) throw err;
-               
+               console.log(result);
                 res.send(result);
               });
           
 });
 
-app.get('/login', (req, res)=> {
+app.post('/login', (req, res)=> {
     var email=req.body.email;
     var password=req.body.password;
     var sql="SELECT * FROM auth_table WHERE email=? and password=?";
     mysqlConnection.query(sql,[email,password],function(err, result){
         if (err) throw err;
-               console.log(result);
+               
                 res.send(result);
               });
           

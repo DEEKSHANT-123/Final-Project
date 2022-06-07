@@ -39,3 +39,23 @@ app.post('/authentication', (req, res)=> {
             console.log('err');
     })
 });
+
+
+
+//INSERT
+app.post('/authentication', (req, res)=>{
+   
+    const email=req.body.email;
+    const password=req.body.password;
+    const color=req.body.color;
+    var sql = "SET @email = ?;SET @password = ?;SET @color = ?; \
+    CALL auth_tableEdit(@email, @password, @color);";
+    mysqlConnection.query(sql, [email, password, color],(err, rows, fields)=>{
+        if(!err)
+      {  res.send(rows).status(200);
+
+    }else
+        console.log(rows);
+        
+    })
+})
